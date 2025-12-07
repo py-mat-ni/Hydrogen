@@ -1,0 +1,45 @@
+   1 
+   2 from pyomo.environ import units as pyunits
+   3 
+   4 from idaes.models.properties.modular_properties.base.generic_reaction import (
+   5         ConcentrationForm)
+   6 from idaes.models.properties.modular_properties.reactions.dh_rxn import \
+   7     constant_dh_rxn
+   8 from idaes.models.properties.modular_properties.reactions.rate_forms import \
+   9     power_law_rate
+  10 from idaes.models.properties.modular_properties.reactions.rate_constant import \
+  11     arrhenius
+  12 
+  13 config_dict = {
+  14     "base_units": {
+  15         "time": pyunits.s,
+  16         "length": pyunits.m,
+  17         "mass": pyunits.kg,
+  18         "amount": pyunits.mol,
+  19         "temperature": pyunits.K
+  20     },
+  21     "rate_reactions": {
+  22         "H2comb1": {
+  23             "stoichiometry": {
+  24                 ("Liq", "H2O"): -2,
+  25                 ("Vap", "H2"): 2,
+  26                 ("Vap", "O2"): 1
+  27             },
+  28             "heat_of_reaction": constant_dh_rxn,
+  29             "rate_constant": arrhenius,  # gibbs_energy,
+  30             "rate_form": power_law_rate,
+  31             "concentration_form": ConcentrationForm.moleFraction,
+  32             "parameter_data": {
+  33                 # ToDo Check values
+  34                 "dh_rxn_ref": (571.66, pyunits.kiloJ / pyunits.mol),  # Scheepers2020 286
+  35                 "arrhenius_const": (1e5, pyunits.mol / pyunits.m ** 3 / pyunits.s),  # for arrhenius
+  36                 "energy_activation": (5e4, pyunits.J / pyunits.mol),  # Lettenmeier2016 40-52 kJ/mol
+  37                 # "ds_rxn_ref": (0.1644, pyunits.kiloJ/pyunits.mol/pyunits.K),  # S=(H-G)/T=(286-237)/298 Scheepers2020
+  38                 # "temperature_eq_ref": (298.15, pyunits.K)  # (273.15 + 80, pyunits.K)
+  39             }
+  40         }
+  41     },
+  42 }
+  43 
+  44 
+  45 
